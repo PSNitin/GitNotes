@@ -1,0 +1,1252 @@
+============================+++++++++++++++++++
+
+++++++++++++++++++++++++++++======================
+
+In GIT Bash
+
+git config --global user.name "XYT"
+git config --global user.email "XYT@gmail.com"
+
+------------------------------
+to add alias for notepad++
+
+- in git bash type following:
+      notepad++ ~/.bash_profile
+
+
+alias npp='notepad++ -multiInst -nosession'
+
+--------------------------------
+
+--setting notepad++ as default editor
+
+git config --global core.editor "notepad++ multiInst -nosession"
+
+
+--------------------------------
+-- open global config file for editing
+
+git config --global -e
+
+
+path is : /c/users/XYT
+
+--------------------------------
+P4Merge on Windows
+
+--Configure P4Merge as Diff Tool in Git:
+		git config --global diff.tool p4merge
+		git config --global difftool.p4merge.path "C:/Program Files/Perforce/p4merge.exe"
+		git config --global difftool.prompt false
+		
+--Configure P4Merge as Merge Tool in Git:
+		git config --global merge.tool p4merge
+		git config --global mergetool.p4merge.path "C:/Program Files/Perforce/p4merge.exe"
+		git config --global mergetool.prompt false
+		
+--------------------------------
+
+Creating git repository locally
+
+git init demo
+
+(master) is a default branch name we get whenever we create new get repository.
+
+------------------------------------
+
+Local git states
+
+											Local																  |             Remote
+											                                                                      |
+working directory                           staging area                                 Repository(.git folder)  |
+                                                                                                                  |
+This contain all files						This area used to prepare for				We have GIT repository or |
+and folder for our application				next commit. Files are moved from		    commit history, which     | 
+which may or may not be managed by          modified working directory stage            contain all the committed |
+GIT. Either way GIT is aware of those       to the staging area, and then finally        or saved changes to       | files. 									 committed to the GIT repository.		    the GIT repository.Anything|
+																						here is part of git history|
+																												  | |																																									
+----------------------------------------------------------------------------
+
+--To get the status:
+
+ git status
+ 
+--to move the file from git working directory to staging area:
+
+git add filename
+
+-- To commit the file
+git commit -m "First file in demo repo"
+
+     * -m is to give inline commit message[here the message is "First file in demo repo"]
+	 
+------------------------------------------------
+
+-- adding git repository for the existing project
+  
+    go to the directory where you want to put version control and type
+      
+    git init .  [. is for current directory]	  
+	
+	git add .
+	
+	git commit  [prompt with default text editor to add the commit message]
+	
+-- to see the log
+
+     git log	
+	
+	it will give all the commit related to this repository.
+	
+-- another command to see detail log
+   
+   git show
+
+-- command to tell which all files are tracking
+
+  git ls-files
+
+-- Git express commit command do staging and commit and it relies upon tracked files in order to work.
+  
+  git commit -am   [-a parameter tells to add modified files to the staging area and then direct it to commit]  
+  
+--------------------------------------------------------
+
+--backing out changes
+
+ git reset HEAD README.md
+
+to discard the changes in the file in working directory and get the last committed file from git repository
+
+ git checkout -- README.md 
+ 
+ --------------------------------------------------
+ 
+ History and making new commands with Alias
+ 
+ git help log
+ 
+ git log --oneline --graph --decorate --all
+           
+		    --oneline : this will provide simplified commit entry
+			--graph : which will provide a Astrix based graph denoting our branching hierarchy.
+			--decorate : which will tell us which commit is part of which branch.
+			--all : which will provide the history for all the branches
+
+making new command with alias
+
+ git config --global alias.hist "log --oneline --graph --decorate --all"
+
+ 
+ List out the global config
+	git config --global --list
+ 
+ How to use alias
+  git hist   [ which show result similar to git log --oneline --graph --decorate --all]
+  
+ 
+ to get the log of particular file
+ 
+  git hist -- LICENSE.md
+
+-------------------------------------------
+
+Renaming the file
+  git mv oldfilename.txt newFileName.txt
+  
+  git commit -m "renaming example"
+  
+For removing the file
+ git rm demo.txt
+
+---------------------------------------
+
+ git add -u [-u stands for update, ]
+
+ git add -A [This include all type of modification possible in current working directory]
+
+--------------------------------------
+Ignoring files that we don't to track in our git repository:
+	npp .gitignore
+	             [we need to mention the pattern or exact file we want to ignore. For example I want to ignore all .log files, so I can mention *.log]
+------------------------------------
+
+Comparing difference
+
+XYT@XYT MINGW64 /d/GIT/project/demo (master)
+$ git hist
+* e9be16c (HEAD -> master) adding ignore file
+* 8c9159b remove myfile.txt
+* 7faf426 rename and add
+* 13004e6 deleting demo file
+* 6f768f4 renaming example
+* 4c9de41 adding example file
+* c40c209 Updating README
+* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+XYT@XYT MINGW64 /d/GIT/project/demo (master)
+$ git diff c40c209 HEAD
+
+----to use configured difftool
+
+ git difftool c40c209 HEAD
+ 
+ 
+ -----------
+ git diff [ This will give us the difference between what recently changed in the working directory vs the head position in git repository]
+ 
+ git difftool [ do the same thing as above, but get result in diff tool p4merge]
+ 
+ 
+ git help diff
+ 
+ --------------------------------
+ 
+ 
+ Branching
+ 
+  Branch = Timeline of commit
+  Branch Names are labels
+    deletion removes label only.
+	
+---Types of Merge:
+
+ 1) Fast Forward:
+      * Simplest case
+      * Like never Branched (Commits on Destination)
+      * Can be disabled	  
+  
+ 2) Automatic :
+      * Non-conflicting Merge detected
+	  * Preserves both timelines
+	  * Merge commit on destination
+ 
+ 3) Manual merge :
+      * Automatic merge is not possible
+      * Conflicting merge states
+      * changes saved in merge commit
+
+------------------------
+Special Marker:
+
+   * Head : 
+         -- points to last commit of current branch
+         -- Can be moved (Advanced)
+
+-----------------------
+
+ --- git branch [list out the branches. We can create new branch using branch command and then switch to new branch]
+ --- git branch -a [can use this one also to list branches]
+   --- git checkout -b updates [this will create new branch "updates" and switch to that branch. -b is to create new branch with name "updates" and switch to that branch]
+
+--- checking difference between branches
+
+    git diff updates master
+	
+--- Lets assume we are done with whatever updates we have on updates branch.In order to integrate any changes on my branch, I need to first	switch to my parent branch.
+ in order to switch branches, we use checkout command
+   
+    git checkout master
+
+----- to merge the branch
+   git merge updates
+
+---- to delete the branch
+  git branch -d updates
+
+------------------------------------------------
+
+Conflict resolution:
+
+	XYT@XYT MINGW64 /d/GIT/project/demo (master)
+	$ git merge very-bad
+	Auto-merging README.md
+	CONFLICT (content): Merge conflict in README.md
+	Automatic merge failed; fix conflicts and then commit the result.
+
+	XYT@XYT MINGW64 /d/GIT/project/demo (master|MERGING)         ---------------------[are conflict occur, we are in merging stage now(master|MERGING).]
+
+	---cat README.md      [this will show the part of the file which is conflicting.]
+
+-------- when we are in merging stage, we can start merging tool by following
+
+      git mergetool
+
+ ---- after resolving the conflict using p4merge tool, you can commit the changes to return back to normal
+
+    ==========================================================================
+			XYT@XYT MINGW64 /d/GIT/project/demo (master|MERGING)
+			$ git mergetool
+			Merging:
+			README.md
+
+			Normal merge conflict for 'README.md':
+			  {local}: modified file
+			  {remote}: modified file
+
+			XYT@XYT MINGW64 /d/GIT/project/demo (master|MERGING)
+			$ git commit -m "Resolving conflict"
+			[master 61135b3] Resolving conflict
+
+			XYT@XYT MINGW64 /d/GIT/project/demo (master)
+			$ git hist
+			*   61135b3 (HEAD -> master) Resolving conflict
+			|\
+			| * 92bf723 (very-bad) very bad update
+			* | 1e6d826 causing issues again
+			|/
+			* 9417f31 adding updates from branch
+			* e9be16c adding ignore file
+			* 8c9159b remove myfile.txt
+			* 7faf426 rename and add
+			* 13004e6 deleting demo file
+			* 6f768f4 renaming example
+			* 4c9de41 adding example file
+			* c40c209 Updating README
+			* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+			XYT@XYT MINGW64 /d/GIT/project/demo (master)
+    ============================================================================
+
+    
+	README.md.orig ------ .orig is the orginal version of the README.md file. so we can simply put it in ignore list.
+
+----------------------------------------------------------------------------------------------------------------
+
+Marking special event with tagging.
+
+	Tags are labels that you can put at any arbitrary commit point.
+	If you don't specify the commit, it will the current commit or head.
+	
+	to list the tag:
+	
+	-------git tag --list
+	
+	To delete the tag:
+	-------git tag -d mytag
+	
+	
+	Two types of tag:
+	
+	 1) light weight tag, where just give a name and it get created for you.
+	 -----git tag mytag
+	 
+	 2) Annotated tags, where extra information associated with tag.
+	 -----git tag -a v1.0 -m "Release 1.0"     [-a is for annotated tag and -m is to associate message with tag]
+	  
+         to get detail about the tag:
+         -----git show v1.0
+		 
+		 
+	--- git tag unstable develop
+               [ unstable is tag name and develop is the branch. So it will tag the latest commit on develop branch as unstable]
+
+    --- git show v1.0
+         [v1.0 is a tag name here]
+
+    
+    --- git tag -a v0.3-beta -m "Release 0.3 (Beta)" 21ac6a6
+
+    --- git push origin stable
+             [pushing the tags from local repository to GitHub. stable is the tagname]	
+
+	
+    --- git push --tags
+             [it will push all the tages from local system to github]    	
+
+    -- git tag -d v0.1-alpha
+	         [to delete the tag locally]
+			 
+	-- git push origin :v0.2-alpha
+           	[to push the tag which is deleted locally to git hub]
+			
+	-- git tag -f unstable 408a4a7
+            [-f is to modify the existing tag. where we are changing the tag from something else 408a4a7]
+
+
+	---git push --force origin unstable
+	    [ --force force all the modifiy, we did on the tag locally, to the GitHub ]
+		
+		
+----------------------------------------------------------------------------------------------------------------
+Saving work in progress with Stashing:
+
+  Suppose we did some changes. Before committing it we decided that we should start this on a branch or want to change context and want to work on something else for a while. We can do that by using git stashing ability.
+  
+    --git stash
+	          this will say that the head is saved, which is the last commit on the branch. And saved it in a WIP 
+	--git stash list
+              shows us the stashes	
+  
+    After stash we are back on a clean working directory.
+   ============================================
+		
+		XYT@XYT MINGW64 /d/GIT/project/demo (master)
+		$ git status
+		On branch master
+		Changes not staged for commit:
+		  (use "git add <file>..." to update what will be committed)
+		  (use "git restore <file>..." to discard changes in working directory)
+				modified:   README.md
+
+		no changes added to commit (use "git add" and/or "git commit -a")
+
+		XYT@XYT MINGW64 /d/GIT/project/demo (master)
+		$ git stash
+		Saved working directory and index state WIP on master: de13773 updating ignore to exclude merge files
+
+		XYT@XYT MINGW64 /d/GIT/project/demo (master)
+		$ git hist
+		*   48ed43c (refs/stash) WIP on master: de13773 updating ignore to exclude merge files
+		|\
+		| * f73970a index on master: de13773 updating ignore to exclude merge files
+		|/
+		* de13773 (HEAD -> master, tag: v1.0) updating ignore to exclude merge files
+		*   61135b3 Resolving conflict
+		|\
+		| * 92bf723 (very-bad) very bad update
+		* | 1e6d826 causing issues again
+		|/
+		* 9417f31 adding updates from branch
+		* e9be16c adding ignore file
+		* 8c9159b remove myfile.txt
+		* 7faf426 rename and add
+		* 13004e6 deleting demo file
+		* 6f768f4 renaming example
+		* 4c9de41 adding example file
+		* c40c209 Updating README
+		* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+		XYT@XYT MINGW64 /d/GIT/project/demo (master)
+		$ git stash list
+		stash@{0}: WIP on master: de13773 updating ignore to exclude merge files        ///[ WE HAVE A WORK IN PROGRESS ON MASTER AND THE LAST COMMIT, WHICH IS	de13773 AND ASSOICATED MESSAGE]
+
+		XYT@XYT MINGW64 /d/GIT/project/demo (master)
+		$ git status
+		On branch master
+		nothing to commit, working tree clean
+
+		XYT@XYT MINGW64 /d/GIT/project/demo (master)
+
+   
+   
+   ============================================   
+    
+		Applying out stash
+		 --git stash pop
+		    this will do 2 actions in one. 1) One is apply, it will apply whatever the last stash. 2) and next is drop, it will drop that stash which is applied. so we will not get anything when we list stash.
+		    
+            =====================================================================
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ npp LICENSE.txt
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git status
+				On branch master
+				Changes not staged for commit:
+				  (use "git add <file>..." to update what will be committed)
+				  (use "git restore <file>..." to discard changes in working directory)
+						modified:   LICENSE.txt
+
+				no changes added to commit (use "git add" and/or "git commit -a")
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				*   48ed43c (refs/stash) WIP on master: de13773 updating ignore to exclude merge files
+				|\
+				| * f73970a index on master: de13773 updating ignore to exclude merge files
+				|/
+				* de13773 (HEAD -> master, tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git commit -am "updating license file"
+				[master 5895522] updating license file
+				 1 file changed, 1 insertion(+), 1 deletion(-)
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git status
+				On branch master
+				nothing to commit, working tree clean
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				* 5895522 (HEAD -> master) updating license file
+				| * 48ed43c (refs/stash) WIP on master: de13773 updating ignore to exclude merge files
+				|/|
+				| * f73970a index on master: de13773 updating ignore to exclude merge files
+				|/
+				* de13773 (tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git stash pop
+				On branch master
+				Changes not staged for commit:
+				  (use "git add <file>..." to update what will be committed)
+				  (use "git restore <file>..." to discard changes in working directory)
+						modified:   README.md
+
+				no changes added to commit (use "git add" and/or "git commit -a")
+				Dropped refs/stash@{0} (48ed43ccf44b3810625198ea715a99f2235b22e7)
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git staus
+				git: 'staus' is not a git command. See 'git --help'.
+
+				The most similar command is
+						status
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				* 5895522 (HEAD -> master) updating license file
+				* de13773 (tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git stash list
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git commit -am "updating readme again"
+				[master 7c27936] updating readme again
+				 1 file changed, 1 insertion(+), 1 deletion(-)
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git status
+				On branch master
+				nothing to commit, working tree clean
+				
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				* 7c27936 (HEAD -> master) updating readme again
+				* 5895522 updating license file
+				* de13773 (tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$
+
+            =====================================================================			
+			
+-------------------------------------------------------------------------------------------------
+
+Time travel with reset and reflog
+        
+      There is a time when we want to go to different commit point.
+
+      There are 3 types of reset:
+       1) Soft: It is the least destructive of them all. All it does is change in where the head is pointing. It preserves the git staging area and working directory.
+	          ----git reset de13773 --soft
+			  ==============================================================
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git status
+				On branch master
+				Changes to be committed:
+				  (use "git restore --staged <file>..." to unstage)
+						modified:   README.md
+
+				Changes not staged for commit:
+				  (use "git add <file>..." to update what will be committed)
+				  (use "git restore <file>..." to discard changes in working directory)
+						modified:   README.md
+
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				* 7c27936 (HEAD -> master) updating readme again
+				* 5895522 updating license file
+				* de13773 (tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git reset de13773 --soft
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				* de13773 (HEAD -> master, tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git status
+				On branch master
+				Changes to be committed:
+				  (use "git restore --staged <file>..." to unstage)
+						modified:   LICENSE.txt
+						modified:   README.md
+
+				Changes not staged for commit:
+				  (use "git add <file>..." to update what will be committed)
+				  (use "git restore <file>..." to discard changes in working directory)
+						modified:   README.md
+
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$
+
+			  
+			  ==============================================================
+
+       2) Mixed: {it is a default one} it will unstage the number of changes and placed into our working directory.
+	   
+               --git reset e9be16c --mixed
+			   
+			   =============================================================
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git hist
+					* de13773 (HEAD -> master, tag: v1.0) updating ignore to exclude merge files
+					*   61135b3 Resolving conflict
+					|\
+					| * 92bf723 (very-bad) very bad update
+					* | 1e6d826 causing issues again
+					|/
+					* 9417f31 adding updates from branch
+					* e9be16c adding ignore file
+					* 8c9159b remove myfile.txt
+					* 7faf426 rename and add
+					* 13004e6 deleting demo file
+					* 6f768f4 renaming example
+					* 4c9de41 adding example file
+					* c40c209 Updating README
+					* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ ^C
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git reset e9be16c --mixed
+					Unstaged changes after reset:
+					M       .gitignore
+					M       LICENSE.txt
+					M       README.md
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git hist
+					* de13773 (tag: v1.0) updating ignore to exclude merge files
+					*   61135b3 Resolving conflict
+					|\
+					| * 92bf723 (very-bad) very bad update
+					* | 1e6d826 causing issues again
+					|/
+					* 9417f31 adding updates from branch
+					* e9be16c (HEAD -> master) adding ignore file
+					* 8c9159b remove myfile.txt
+					* 7faf426 rename and add
+					* 13004e6 deleting demo file
+					* 6f768f4 renaming example
+					* 4c9de41 adding example file
+					* c40c209 Updating README
+					* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$
+			   =============================================================
+       3) Hard:	It is most destructive among all reset mode. It will clean our working and stating directory, that means any changes that is pending is wipped out, along with anything that is in staging area.
+		        --git reset c40c209 --hard		 
+				 
+				 ==============================================================
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git hist
+					* de13773 (tag: v1.0) updating ignore to exclude merge files
+					*   61135b3 Resolving conflict
+					|\
+					| * 92bf723 (very-bad) very bad update
+					* | 1e6d826 causing issues again
+					|/
+					* 9417f31 adding updates from branch
+					* e9be16c (HEAD -> master) adding ignore file
+					* 8c9159b remove myfile.txt
+					* 7faf426 rename and add
+					* 13004e6 deleting demo file
+					* 6f768f4 renaming example
+					* 4c9de41 adding example file
+					* c40c209 Updating README
+					* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git reset c40c209 --hard
+					HEAD is now at c40c209 Updating README
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git status
+					On branch master
+					nothing to commit, working tree clean
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git hist
+					* de13773 (tag: v1.0) updating ignore to exclude merge files
+					*   61135b3 Resolving conflict
+					|\
+					| * 92bf723 (very-bad) very bad update
+					* | 1e6d826 causing issues again
+					|/
+					* 9417f31 adding updates from branch
+					* e9be16c adding ignore file
+					* 8c9159b remove myfile.txt
+					* 7faf426 rename and add
+					* 13004e6 deleting demo file
+					* 6f768f4 renaming example
+					* 4c9de41 adding example file
+					* c40c209 (HEAD -> master) Updating README
+					* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+
+					
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+					$ git log --oneline
+					c40c209 (HEAD -> master) Updating README
+					86fd0a5 Adding both a README and LICENSE file to the repo
+
+					XYT@XYT MINGW64 /d/GIT/project/demo (master)
+
+				 
+				 ==============================================================
+				 
+		git reflog : It shows all the actions we have taken while in this repository. [while git log --oneline shows us our commit ids]
+           ===========================================
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git reflog
+				c40c209 (HEAD -> master) HEAD@{0}: reset: moving to c40c209
+				e9be16c HEAD@{1}: reset: moving to e9be16c
+				de13773 (tag: v1.0) HEAD@{2}: reset: moving to de13773
+				7c27936 HEAD@{3}: commit: updating readme again
+				5895522 HEAD@{4}: commit: updating license file
+				de13773 (tag: v1.0) HEAD@{5}: reset: moving to HEAD
+				de13773 (tag: v1.0) HEAD@{6}: commit: updating ignore to exclude merge files
+				61135b3 HEAD@{7}: commit (merge): Resolving conflict
+				1e6d826 HEAD@{8}: commit: causing issues again
+				9417f31 HEAD@{9}: checkout: moving from very-bad to master
+				92bf723 (very-bad) HEAD@{10}: commit: very bad update
+				9417f31 HEAD@{11}: checkout: moving from master to very-bad
+				9417f31 HEAD@{12}: merge updates: Fast-forward
+				e9be16c HEAD@{13}: checkout: moving from updates to master
+				9417f31 HEAD@{14}: commit: adding updates from branch
+				e9be16c HEAD@{15}: checkout: moving from master to updates
+				e9be16c HEAD@{16}: commit: adding ignore file
+				8c9159b HEAD@{17}: commit: remove myfile.txt
+				7faf426 HEAD@{18}: commit: rename and add
+				13004e6 HEAD@{19}: commit: deleting demo file
+				6f768f4 HEAD@{20}: commit: renaming example
+				4c9de41 HEAD@{21}: commit: adding example file
+				c40c209 (HEAD -> master) HEAD@{22}: commit: Updating README
+				86fd0a5 HEAD@{23}: commit (initial): Adding both a README	
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git reset --hard 7c27936
+				HEAD is now at 7c27936 updating readme again
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git hist
+				* 7c27936 (HEAD -> master) updating readme again
+				* 5895522 updating license file
+				* de13773 (tag: v1.0) updating ignore to exclude merge files
+				*   61135b3 Resolving conflict
+				|\
+				| * 92bf723 (very-bad) very bad update
+				* | 1e6d826 causing issues again
+				|/
+				* 9417f31 adding updates from branch
+				* e9be16c adding ignore file
+				* 8c9159b remove myfile.txt
+				* 7faf426 rename and add
+				* 13004e6 deleting demo file
+				* 6f768f4 renaming example
+				* 4c9de41 adding example file
+				* c40c209 Updating README
+				* 86fd0a5 Adding both a README and LICENSE file to the repo
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+
+           ===========================================		   
+		   
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	
+	Linking our local git repository with online repository.
+		   
+		   ---git remote add origin https://github.com/XYT/demo.git
+		        [sub command "add" takes two parameter : 1) name of the remote reference we wants to create, in this case "origin" 2) full url to the remote repository ]
+				
+				
+		  ----XYT@XYT MINGW64 /d/GIT/project/demo (master)
+				$ git remote -v                                                  //[Git will provide two urls: one for fetching and one for pushing, 99% time it is same url]
+				origin  https://github.com/XYT/demo.git (fetch)
+				origin  https://github.com/XYT/demo.git (push)
+
+				XYT@XYT MINGW64 /d/GIT/project/demo (master)
+	
+-------------------------------------------------------------------------------------------------------	
+
+   Pushing our local demo repository to the remote git repository.
+   
+    For first time, execute following command and restart the git bash.
+	------git config --global --unset https.proxy
+	
+	
+    -- git push -u origin master --tags
+	          [-u : it is going to setup a tracking branch relationship between the master branch on the local repository and the master branch on remote repository.
+			   origin : the name of the reference of the remote github repository that we going to use in order to push up our changes, in this case origin
+			   master : name of the branch we are going to push up, in this case master 
+			   --tags : to send our all the tags in our local git repository to the git hub]
+			   
+	========================================================================================
+			XYT@XYT MINGW64 /d/GIT/project/demo (master)
+			$ git push -u origin master --tags
+			Enumerating objects: 43, done.
+			Counting objects: 100% (43/43), done.
+			Delta compression using up to 4 threads
+			Compressing objects: 100% (37/37), done.
+			Writing objects: 100% (43/43), 3.87 KiB | 283.00 KiB/s, done.
+			Total 43 (delta 14), reused 0 (delta 0), pack-reused 0
+			remote: Resolving deltas: 100% (14/14), done.
+			To https://github.com/XYT/demo.git
+			 * [new branch]      master -> master
+			 * [new tag]         v1.0 -> v1.0
+			Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+			XYT@XYT MINGW64 /d/GIT/project/demo (master)
+
+	========================================================================================
+	
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Setting up SSH, follow steps:
+	
+	
+	XYT@XYT MINGW64 ~
+$ ls .ssh
+ls: cannot access '.ssh': No such file or directory
+
+XYT@XYT MINGW64 ~
+$ pwd
+/c/Users/nitin
+
+XYT@XYT MINGW64 ~
+$ mkdir .ssh
+
+XYT@XYT MINGW64 ~
+$ cd .ssh/
+
+XYT@XYT MINGW64 ~/.ssh
+$ pwd
+/c/Users/nitin/.ssh
+
+XYT@XYT MINGW64 ~/.ssh
+$ ssh-keygen -t rsa -C "nitin.simplynitin@gmail.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/nitin/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /c/Users/nitin/.ssh/id_rsa
+Your public key has been saved in /c/Users/nitin/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:KmXNye3Js2b9sOwxLteQTAOcoI8Zmo2y6hAhy5gsNW4 nitin.simplynitin@gmail.com
+The key's randomart image is:
++---[RSA 3072]----+
+|        .o .     |
+|       .  +      |
+|o o   o    .     |
+|=* . = O o  o    |
+|*oE + * S .o o   |
+|.o o o . o .+    |
+|. . . .   =.+o   |
+|..   .    +=o=.  |
+|o.       o.+=..  |
++----[SHA256]-----+
+
+XYT@XYT MINGW64 ~/.ssh
+$ ls -al
+total 17
+drwxr-xr-x 1 XYT 197121    0 May 26 03:48 ./
+drwxr-xr-x 1 XYT 197121    0 May 26 03:45 ../
+-rw-r--r-- 1 XYT 197121 2655 May 26 03:48 id_rsa
+-rw-r--r-- 1 XYT 197121  581 May 26 03:48 id_rsa.pub
+
+XYT@XYT MINGW64 ~/.ssh
+$ npp id_rsa.pub
+
+-------------copy the public key, and create a SSH key in GITHUB portal.
+
+XYT@XYT MINGW64 ~/.ssh
+$ ssh -T git@github.com
+The authenticity of host 'github.com (13.234.210.38)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com' (RSA) to the list of known hosts.
+Enter passphrase for key '/c/Users/nitin/.ssh/id_rsa':
+Hi XYT! You've successfully authenticated, but GitHub does not provide shell access.
+
+---------------------------------------------------------------------------
+
+Create a local copy of Remote GIT repository with clone command
+
+ ------git clone git@github.com:XYT/my-website.git
+ 
+ create a local clone with folder name of your choice
+  ------git clone git@github.com:XYT/my-website.git NameOfYourChoice
+  
+ ---------------------------------------------------------------------
+
+  --git push
+     this will tell you if any difference between the latest update on GIT hub repository and the update you are pushing from local.
+
+  -- git config --global push.default simple
+
+---------------------------------------------------------------------
+
+Difference between fetch and pull
+
+  Term pull is 2 commands in one : it is fetch and also a merge. It will fetch all the changes from remote repository and merge them in current local repository.
+  
+  --git fetch
+    It will fetch the changes from remote repository.
+	
+  -- git pull 
+      It will merge the changes from remote repository, which we fetched using fetch command.
+
+ *********Do a pull or fetch before any push is a best practice.
+
+ 
+----------------------------------------------------------------------
+
+updating Repository and Remote reference
+
+   --- git remote set-url origin git@github.com:XYT/website.git
+
+   -- git remote show origin
+           to check the detail about remote reference
+
+-------------------------------------------------------------------------
+
+--------git fetch -p  
+          [ -p is the prune option, which means it look for an any dead branch and remove it's reference]
+		   
+------------------------------------------------------------------------
+    -----git pull --all
+              [it will pull all the updates from all the branches]	
+			  
+------------------------------------------------------------------------
+ deleting the branch reference of the branch which is already deleted.
+    ============================================================================================================ 
+	---- XYT@XYT MINGW64 /d/GIT/project/website (main)
+			$ git branch -a
+			* main
+			  remotes/origin/HEAD -> origin/main
+			  remotes/origin/main
+			  remotes/origin/update-readme
+
+			XYT@XYT MINGW64 /d/GIT/project/website (main)
+			$ git push origin :update-readme
+			Enter passphrase for key '/c/Users/nitin/.ssh/id_rsa':
+			To github.com:XYT/website.git
+			 - [deleted]         update-readme
+
+			XYT@XYT MINGW64 /d/GIT/project/website (main)
+			$ git branch -a
+			* main
+			  remotes/origin/HEAD -> origin/main
+			  remotes/origin/main
+    ============================================================================================================= 
+	
+----------------------------------------------------
+pulling with Rebase
+
+   Rebase : it rewinds the current commit that are on your branch to a point to where the branch you are merging in originally diverged; then playing back the commits that happened on the branch that you are wanting to bring in; and then, after that, playing on top of that any commits that have happened on the branch that you are currently on, thus making any changes that you have include the changes that happened on the remote branch, but with your changes made ahead of them.
+
+   =======================================================================================================
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$ git status
+		On branch main
+		Your branch and 'origin/main' have diverged,
+		and have 1 and 1 different commits each, respectively.
+		  (use "git pull" to merge the remote branch into yours)
+
+		nothing to commit, working tree clean
+
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$
+
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$ git history
+		git: 'history' is not a git command. See 'git --help'.
+
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$ git hist
+		* 8e7b93d (HEAD -> main) Updating index.html locally before rebase
+		| * 45f9bf6 (origin/main, origin/HEAD) Readme updated on master on GitHub before Rebase
+		|/
+		* c307cbc More tweaks to README
+		* 980a87f Tweaked readme
+		*   8cbe6f0 Merge branch 'remove-ipsum'
+		|\
+		| * ca40e45 removing ipsum file
+		* |   27aa4d3 Merge pull request #2 from XYT/example
+		|\ \
+		| |/
+		|/|
+		| * 6ff67e6 Updating readme from branch example
+		|/
+		* 5e14135 Deleting Demo file
+		* 63cccb9 Rename file to Markdown syntax
+		* 4e40ca7 Create new demo file
+		*   21ac6a6 Merge pull request #1 from XYT/feature-lipsum
+		|\
+		| * 5bb8908 Create new file -- filler text
+		|/
+		* 1c97744 Update title for Personal Website
+		*   05ddac1 Merge branch 'main' of github.com:XYT/my-website
+		|\
+		| * 33a1219 Providing Title on index.html
+		* | b7b3e20 Updating README
+		|/
+		* c0a40cf adding initial website files
+		* d94d8c9 Initial commit
+
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$ git pull --rebase
+		Enter passphrase for key '/c/Users/nitin/.ssh/id_rsa':
+		Successfully rebased and updated refs/heads/main.
+
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$ git hist
+		* 73d2cad (HEAD -> main) Updating index.html locally before rebase
+		* 45f9bf6 (origin/main, origin/HEAD) Readme updated on master on GitHub before Rebase
+		* c307cbc More tweaks to README
+		* 980a87f Tweaked readme
+		*   8cbe6f0 Merge branch 'remove-ipsum'
+		|\
+		| * ca40e45 removing ipsum file
+		* |   27aa4d3 Merge pull request #2 from XYT/example
+		|\ \
+		| |/
+		|/|
+		| * 6ff67e6 Updating readme from branch example
+		|/
+		* 5e14135 Deleting Demo file
+		* 63cccb9 Rename file to Markdown syntax
+		* 4e40ca7 Create new demo file
+		*   21ac6a6 Merge pull request #1 from XYT/feature-lipsum
+		|\
+		| * 5bb8908 Create new file -- filler text
+		|/
+		* 1c97744 Update title for Personal Website
+		*   05ddac1 Merge branch 'main' of github.com:XYT/my-website
+		|\
+		| * 33a1219 Providing Title on index.html
+		* | b7b3e20 Updating README
+		|/
+		* c0a40cf adding initial website files
+		* d94d8c9 Initial commit
+
+		XYT@XYT MINGW64 /d/GIT/project/website (main)
+		$
+
+   =======================================================================================================
+   
+------------------------------------------------------------------------------------------------------------
+
+Advance trick for compare in GITHUB
+    ---- develop@{3days}
+           [we can use this expression in compare in pull request session]
+
+    ---- main@{2021-06-01}
+            [for specific date]	
+	
+    --- HEAD@{3} 
+             [this will take you 3 commit back from head] 	
+			 
+	---HEAD^
+           [HEAD minus 1]	
+		   
+
+----------------------------------------------------------------------------------------------------------------
+==================================================================================================================
+
+Social coding
+---------------
+
+=====================================================================================================================
+
+Gists :-
+  -- Simple way to share code
+  -- Entire file or Just a snip
+  -- "Micro" Git Repository
+       --many same operations
+	   --Local access
+	   
+  Gist is a simple way to share snippets and pastes with others. All gists are GIT repositories, so they are automatically versioned, forkable and usable from Git.
+  
+  
+============================================================================================================================
+
+Organization :
+
+ -----------adding refernce to the git repository under ogranization
+             
+				
+				XYT@XYT MINGW64 /d/GIT/project/website (develop)
+				$ git remote add upstream git@github.com:PSN-organization-example/website.git
+
+				XYT@XYT MINGW64 /d/GIT/project/website (develop)
+				$ git remote -v
+				origin  git@github.com:XYT/website.git (fetch)
+				origin  git@github.com:XYT/website.git (push)
+				upstream        git@github.com:PSN-organization-example/website.git (fetch)
+				upstream        git@github.com:PSN-organization-example/website.git (push)
+
+-- fetching information from github :
+
+		XYT@XYT MINGW64 /d/GIT/project/website (develop)
+		$ git fetch upstream
+		Enter passphrase for key '/c/Users/nitin/.ssh/id_rsa':
+		From github.com:PSN-organization-example/website
+		 * [new branch]      develop    -> upstream/develop
+		 * [new branch]      main       -> upstream/main
+
+
+
+-- if you want to fetch from all the reference at once, use following command
+
+		XYT@XYT MINGW64 /d/GIT/project/website (develop)
+		$ git fetch --all
+		Fetching origin
+		Enter passphrase for key '/c/Users/nitin/.ssh/id_rsa':
+		Fetching upstream
+		Enter passphrase for key '/c/Users/nitin/.ssh/id_rsa':
+
+--- git checkout -b shared origin/shared
+             [-b to create new branch on local repository]
+			 [shared - name of the branch]
+             [origin/shared : our starting point]
+
+    =====================================
+		
+		XYT@XYT MINGW64 /d/GIT/project/website (develop)
+		$ git branch -a
+		* develop
+		  main
+		  remotes/origin/HEAD -> origin/develop
+		  remotes/origin/develop
+		  remotes/origin/main
+		  remotes/origin/shared
+		  remotes/upstream/develop
+		  remotes/upstream/main
+		  remotes/upstream/shared
+
+		XYT@XYT MINGW64 /d/GIT/project/website (develop)
+		$ git checkout shared
+		hint: If you meant to check out a remote tracking branch on, e.g. 'origin',
+		hint: you can do so by fully qualifying the name with the --track option:
+		hint:
+		hint:     git checkout --track origin/<name>
+		hint:
+		hint: If you'd like to always have checkouts of an ambiguous <name> prefer
+		hint: one remote, e.g. the 'origin' remote, consider setting
+		hint: checkout.defaultRemote=origin in your config.
+		fatal: 'shared' matched multiple (2) remote tracking branches
+
+		XYT@XYT MINGW64 /d/GIT/project/website (develop)
+		$ git checkout -b shared origin/shared
+		Switched to a new branch 'shared'
+		Branch 'shared' set up to track remote branch 'shared' from 'origin'.
+
+		XYT@XYT MINGW64 /d/GIT/project/website (shared)
+		$ git branch -a
+		  develop
+		  main
+		* shared
+		  remotes/origin/HEAD -> origin/develop
+		  remotes/origin/develop
+		  remotes/origin/main
+		  remotes/origin/shared
+		  remotes/upstream/develop
+		  remotes/upstream/main
+		  remotes/upstream/shared
+
+		XYT@XYT MINGW64 /d/GIT/project/website (shared)	
+	
+	=====================================
+		   
